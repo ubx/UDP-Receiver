@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="com.almworks.sqlite4java:sqlite4java:0.282" type="repository">
+    <properties maven-id="com.almworks.sqlite4java:sqlite4java:0.282" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/sqlite4java-0.282.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
