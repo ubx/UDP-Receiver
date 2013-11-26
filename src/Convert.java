@@ -66,7 +66,7 @@ public class Convert {
     }
 
     public static String getHexKey(byte[] buffer) {
-        return Long.toHexString(ByteBuffer.wrap(buffer, (Integer.SIZE + Short.SIZE + Short.SIZE) / 8, Long.SIZE / 8).getLong());
+        return Long.toHexString(ByteBuffer.wrap(buffer, (Integer.SIZE + Short.SIZE + Short.SIZE) / 8, Long.SIZE / 8).getLong()).toUpperCase();
     }
 
     public static Fix convert(byte[] buffer) {
