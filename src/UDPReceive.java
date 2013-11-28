@@ -15,6 +15,18 @@ public class UDPReceive {
 
     private static Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
 
+    private static GpxFileWriter gpxFileWriter = new GpxFileWriter("tracks.gpx");
+
+    static {
+        Runtime.getRuntime().
+                addShutdownHook(new Thread(new Runnable() {
+                    public void run() {
+                        System.out.println("EXIT...");
+                        gpxFileWriter.close();
+                    }
+                }));
+    }
+
     public static void main(String args[]) {
         try {
             int port = 5597;
@@ -41,11 +53,12 @@ public class UDPReceive {
                 }
                 if (fix != null) {
                     int rcvtime = getCurrentTime();
+                    String hexKey = Convert.getHexKey(buffer);
                     System.out.println(packet.getAddress().getHostName()
                             + ": Fix, rcv time=" + rcvtime
                             + " time=" + fix.time
                             + "(" + (rcvtime - fix.time) + ")"
-                            + " key=" + Convert.getHexKey(buffer)
+                            + " key=" + hexKey
                             + " lat=" + dfLat.format(fix.latitude)
                             + " lon=" + dfLon.format(fix.longitude)
                             + " trk=" + dfMis.format(fix.track)
@@ -54,6 +67,7 @@ public class UDPReceive {
                             + " vario=" + dfMis.format(fix.vario)
                             + " noise=" + dfMis.format(fix.noise)
                     );
+                    gpxFileWriter.writeFix(hexKey, fix);
 
 
                 } else {
@@ -61,7 +75,6 @@ public class UDPReceive {
                     String msg = new String(buffer, 0, packet.getLength());
                     System.out.println(packet.getAddress().getHostName() + ": " + msg);
                 }
-
                 // Reset the length of the packet before reusing it.
                 packet.setLength(buffer.length);
             }
