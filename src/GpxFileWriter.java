@@ -4,10 +4,7 @@ import org.alternativevision.gpx.beans.Track;
 import org.alternativevision.gpx.beans.Waypoint;
 
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
+import java.util.*;
 
 public class GpxFileWriter {
 
@@ -33,7 +30,7 @@ public class GpxFileWriter {
         wp.setLongitude(fix.longitude);
         wp.setLatitude(fix.latitude);
         wp.setElevation(Double.valueOf(fix.altitude));
-        wp.setTime(GregorianCalendar.getInstance().getTime()); // ToDo -- set time from source i.e. fix.time
+        wp.setTime(toDate(fix.time));
         wps.add(wp);
     }
 
@@ -53,6 +50,16 @@ public class GpxFileWriter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    private Date toDate(int millisOfDay) {
+        Calendar calendar = GregorianCalendar.getInstance();
+//        calendar.set(Calendar.HOUR_OF_DAY, millisOfDay / 3600000);
+//        calendar.set(Calendar.MINUTE, millisOfDay % 3600000);
+//        calendar.set(Calendar.SECOND, millisOfDay % 60000);
+//        calendar.set(Calendar.MILLISECOND, millisOfDay % 1000);
+        return calendar.getTime();
     }
 
 
