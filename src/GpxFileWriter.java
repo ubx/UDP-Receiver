@@ -5,6 +5,8 @@ import org.alternativevision.gpx.beans.Waypoint;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 public class GpxFileWriter {
@@ -31,7 +33,7 @@ public class GpxFileWriter {
         wp.setLongitude(fix.longitude);
         wp.setLatitude(fix.latitude);
         wp.setElevation(Double.valueOf(fix.altitude));
-        // ToDo -- set time
+        wp.setTime(GregorianCalendar.getInstance().getTime()); // ToDo -- set time from source i.e. fix.time
         wps.add(wp);
     }
 
