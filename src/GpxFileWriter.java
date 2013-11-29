@@ -10,6 +10,8 @@ public class GpxFileWriter {
 
     private static FileOutputStream out;
     private static HashMap<String, ArrayList<Waypoint>> key2Waypoints = new HashMap<String, ArrayList<Waypoint>>(10);
+    private static final TimeZone gmt = TimeZone.getTimeZone("GMT");
+
 
     public GpxFileWriter(String fileName) {
         try {
@@ -20,7 +22,7 @@ public class GpxFileWriter {
     }
 
 
-    public void writeFix(String key, Convert.Fix fix) {
+    public synchronized void writeFix(String key, int time, Convert.Fix fix) {
         ArrayList<Waypoint> wps = key2Waypoints.get(key);
         if (wps == null) {
             wps = new ArrayList<Waypoint>();
@@ -30,11 +32,11 @@ public class GpxFileWriter {
         wp.setLongitude(fix.longitude);
         wp.setLatitude(fix.latitude);
         wp.setElevation(Double.valueOf(fix.altitude));
-        wp.setTime(toDate(fix.time));
+        wp.setTime(toDate(time));
         wps.add(wp);
     }
 
-    public void close() {
+    public synchronized void close() {
         GPX gpx = new GPX();
         for (String key : key2Waypoints.keySet()) {
             ArrayList<Waypoint> wps = key2Waypoints.get(key);
@@ -54,11 +56,12 @@ public class GpxFileWriter {
 
 
     private Date toDate(int millisOfDay) {
-        Calendar calendar = GregorianCalendar.getInstance();
-//        calendar.set(Calendar.HOUR_OF_DAY, millisOfDay / 3600000);
-//        calendar.set(Calendar.MINUTE, millisOfDay % 3600000);
-//        calendar.set(Calendar.SECOND, millisOfDay % 60000);
-//        calendar.set(Calendar.MILLISECOND, millisOfDay % 1000);
+        Calendar calendar = GregorianCalendar.getInstance(gmt);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.setTimeInMillis(calendar.getTimeInMillis() + millisOfDay);
         return calendar.getTime();
     }
 

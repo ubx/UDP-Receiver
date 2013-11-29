@@ -1,5 +1,6 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.SocketException;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -7,6 +8,7 @@ import java.util.TimeZone;
 
 public class UDPReceive {
 
+    private static DatagramSocket dsocket;
 
     private static DecimalFormat dfLat = new DecimalFormat("##.######");
     private static DecimalFormat dfLon = new DecimalFormat("###.######");
@@ -21,7 +23,7 @@ public class UDPReceive {
         Runtime.getRuntime().
                 addShutdownHook(new Thread(new Runnable() {
                     public void run() {
-                        System.out.println("EXIT...");
+                        dsocket.close();
                         gpxFileWriter.close();
                     }
                 }));
@@ -32,7 +34,7 @@ public class UDPReceive {
             int port = 5597;
 
             // Create a socket to listen on the port.
-            DatagramSocket dsocket = new DatagramSocket(port);
+            dsocket = new DatagramSocket(port);
 
             // Create a buffer to read datagrams into. If a
             // packet is larger than this buffer, the
@@ -67,9 +69,8 @@ public class UDPReceive {
                             + " vario=" + dfMis.format(fix.vario)
                             + " noise=" + dfMis.format(fix.noise)
                     );
-                    gpxFileWriter.writeFix(hexKey, fix);
-
-
+                    gpxFileWriter.writeFix(hexKey + "-gps", fix.time, fix);
+                    gpxFileWriter.writeFix(hexKey + "-rcv", rcvtime, fix);
                 } else {
                     // Convert the contents to a string, and display them
                     String msg = new String(buffer, 0, packet.getLength());
@@ -78,6 +79,9 @@ public class UDPReceive {
                 // Reset the length of the packet before reusing it.
                 packet.setLength(buffer.length);
             }
+
+        } catch (SocketException e) {
+            // ignore
         } catch (Exception e) {
             System.err.println(e);
         }
@@ -85,7 +89,6 @@ public class UDPReceive {
 
 
     private static int getCurrentTime() {
-
         calendar.setTimeInMillis(System.currentTimeMillis());
         return (calendar.get(Calendar.HOUR_OF_DAY) * 3600 + calendar.get(Calendar.MINUTE) * 60
                 + calendar.get(Calendar.SECOND)) * 1000 + calendar.get(Calendar.MILLISECOND);
