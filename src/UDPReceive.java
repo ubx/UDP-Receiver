@@ -32,7 +32,7 @@ public class UDPReceive {
 
     public static void main(String args[]) {
 
-        String fngpx = "";
+        String fngpx;
         int c = 0;
         do {
         } while (new File(fngpx = "tracks-" + c++ + ".gpx").isFile());
