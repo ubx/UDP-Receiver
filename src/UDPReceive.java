@@ -1,3 +1,4 @@
+import java.io.File;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -17,7 +18,7 @@ public class UDPReceive {
 
     private static Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
 
-    private static GpxFileWriter gpxFileWriter = new GpxFileWriter("tracks.gpx");
+    private static GpxFileWriter gpxFileWriter;
 
     static {
         Runtime.getRuntime().
@@ -30,6 +31,13 @@ public class UDPReceive {
     }
 
     public static void main(String args[]) {
+
+        String fngpx = "";
+        int c = 0;
+        do {
+        } while (new File(fngpx = "tracks-" + c++ + ".gpx").isFile());
+        gpxFileWriter = new GpxFileWriter(fngpx);
+
         try {
             int port = 5597;
 
