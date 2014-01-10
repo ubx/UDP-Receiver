@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ReadPcapFile:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/ReadPcapFile</output-path>
+    <root id="archive" name="ReadPcapFile.jar">
+      <element id="module-output" name="UDP-Receiver" />
+    </root>
+  </artifact>
+</component>

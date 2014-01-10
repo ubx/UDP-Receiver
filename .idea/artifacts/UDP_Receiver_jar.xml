@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="UDP-Receiver:jar">
-    <output-path>$PROJECT_DIR$/out/artifacts/UDP_Receiver_jar</output-path>
+    <output-path>$PROJECT_DIR$/out/artifacts/UDP_Receiver</output-path>
     <root id="archive" name="UDP-Receiver.jar">
       <element id="module-output" name="UDP-Receiver" />
     </root>
