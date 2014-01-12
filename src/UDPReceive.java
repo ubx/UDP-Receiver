@@ -1,7 +1,5 @@
 import java.io.File;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.SocketException;
+import java.net.*;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -15,8 +13,9 @@ public class UDPReceive {
     private static DecimalFormat dfLon = new DecimalFormat("###.######");
     private static DecimalFormat dfAlt = new DecimalFormat("#####");
     private static DecimalFormat dfMis = new DecimalFormat("####");
-
     private static Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+    private static final String DEF_IP_ADDRESS = "78.47.50.46";   // default is the real Live Tracking server
+    //private static final String DEF_IP_ADDRESS = "192.168.1.36";
 
     private static GpxFileWriter gpxFileWriter;
 
@@ -30,7 +29,12 @@ public class UDPReceive {
                 }));
     }
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws UnknownHostException {
+
+        boolean relay = args.length > 0 && args[0] != null && args[0].equals("-relay");
+        DatagramPacket datagram = null;
+        SocketAddress serverAddress = new InetSocketAddress(InetAddress.getByName(DEF_IP_ADDRESS), 5597);
+        DatagramSocket socketTx = null;
 
         String fngpx;
         int c = 0;
@@ -79,6 +83,18 @@ public class UDPReceive {
                     );
                     gpxFileWriter.writeFix(hexKey + "-gps", fix.time, fix);
                     gpxFileWriter.writeFix(hexKey + "-rcv", rcvtime, fix);
+
+                    // relay packet to real SkyLines server
+                    if (relay) {
+                        if (socketTx == null) socketTx = new DatagramSocket();
+                        if (datagram == null) {
+                            datagram = new DatagramPacket(buffer, Convert.DATA_LENGTH, serverAddress);
+                        } else {
+                            datagram.setData(buffer);
+                            datagram.setLength(Convert.DATA_LENGTH);
+                            socketTx.send(datagram);
+                        }
+                    }
                 } else {
                     // Convert the contents to a string, and display them
                     String msg = new String(buffer, 0, packet.getLength());
