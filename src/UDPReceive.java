@@ -86,14 +86,16 @@ public class UDPReceive {
 
                     // relay packet to real SkyLines server
                     if (relay) {
-                        if (socketTx == null) socketTx = new DatagramSocket();
+                        if (socketTx == null) {
+                            socketTx = new DatagramSocket();
+                        }
                         if (datagram == null) {
                             datagram = new DatagramPacket(buffer, Convert.DATA_LENGTH, serverAddress);
                         } else {
                             datagram.setData(buffer);
                             datagram.setLength(Convert.DATA_LENGTH);
-                            socketTx.send(datagram);
                         }
+                        socketTx.send(datagram);
                     }
                 } else {
                     // Convert the contents to a string, and display them
