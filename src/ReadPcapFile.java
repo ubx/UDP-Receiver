@@ -38,7 +38,7 @@ public class ReadPcapFile {
                 Convert.Fix fix = Convert.convert(buffer);
                 if (fix != null) {
                     String hexKey = Convert.getHexKey(buffer);
-                    gpxFileWriter.writeFix(hexKey + "-dev", fix.time, fix);
+                    gpxFileWriter.writeFix(hexKey + "-dev", fix.time, fix, "pcap");
                     pcnt++;
                 }
             } catch (Exception e) {

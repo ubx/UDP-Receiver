@@ -22,7 +22,7 @@ public class GpxFileWriter {
     }
 
 
-    public synchronized void writeFix(String key, int time, Convert.Fix fix) {
+    public synchronized void writeFix(String key, int time, Convert.Fix fix, String src) {
         ArrayList<Waypoint> wps = key2Waypoints.get(key);
         if (wps == null) {
             wps = new ArrayList<Waypoint>();
@@ -33,6 +33,7 @@ public class GpxFileWriter {
         wp.setLatitude(fix.latitude);
         wp.setElevation(Double.valueOf(fix.altitude));
         wp.setTime(toDate(time));
+        wp.setSrc(src);
         wps.add(wp);
     }
 

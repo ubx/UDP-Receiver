@@ -68,7 +68,8 @@ public class UDPReceive {
                 if (fix != null) {
                     int rcvtime = getCurrentTime();
                     String hexKey = Convert.getHexKey(buffer);
-                    System.out.println(packet.getAddress().getHostName()
+                    String src = packet.getAddress().getHostName();
+                    System.out.println(src
                             + ": Fix, rcv time=" + rcvtime
                             + " time=" + fix.time
                             + "(" + (rcvtime - fix.time) + ")"
@@ -81,8 +82,8 @@ public class UDPReceive {
                             + " vario=" + dfMis.format(fix.vario)
                             + " noise=" + dfMis.format(fix.noise)
                     );
-                    gpxFileWriter.writeFix(hexKey + "-gps", fix.time, fix);
-                    gpxFileWriter.writeFix(hexKey + "-rcv", rcvtime, fix);
+                    gpxFileWriter.writeFix(hexKey + "-gps", fix.time, fix, src);
+                    gpxFileWriter.writeFix(hexKey + "-rcv", rcvtime, fix, src);
 
                     // relay packet to real SkyLines server
                     if (relay) {
