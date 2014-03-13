@@ -4,15 +4,16 @@ import org.pcap4j.packet.Packet;
 import org.pcap4j.util.ByteArrays;
 
 import java.io.File;
+import java.net.InetAddress;
 
 public class ReadPcapFile {
 
-   /**
-    * Read a pcap-file and convert the packages payload data to a gpx file.
-    *
-    *  Pcap-file captured on the telephone with the Android App "Shark for Root" (https://play.google.com/store/apps/details?id=lv.n3o.shark)
-    *  Parameters: "-vv -s 0 udp port 5597"
-    */
+    /**
+     * Read a pcap-file and convert the packages payload data to a gpx file.
+     * <p/>
+     * Pcap-file captured on the telephone with the Android App "Shark for Root" (https://play.google.com/store/apps/details?id=lv.n3o.shark)
+     * Parameters: "-vv -s 0 udp port 5597"
+     */
 
     private static final String PCAP_FILE_KEY = ReadPcapFile.class.getName() + ".pcapFile";
 
@@ -38,7 +39,8 @@ public class ReadPcapFile {
                 Convert.Fix fix = Convert.convert(buffer);
                 if (fix != null) {
                     String hexKey = Convert.getHexKey(buffer);
-                    gpxFileWriter.writeFix(hexKey + "-dev", fix.time, fix, "pcap");
+                    String src = InetAddress.getByAddress(ByteArrays.getSubArray(rd, 29, 4)).getHostAddress();
+                    gpxFileWriter.writeFix(hexKey + "-dev", fix.time, fix, src);
                     pcnt++;
                 }
             } catch (Exception e) {
