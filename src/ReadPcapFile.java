@@ -39,7 +39,7 @@ public class ReadPcapFile {
                 Convert.Fix fix = Convert.convert(buffer);
                 if (fix != null) {
                     String hexKey = Convert.getHexKey(buffer);
-                    String src = InetAddress.getByAddress(ByteArrays.getSubArray(rd, 29, 4)).getHostAddress();
+                    String src = InetAddress.getByAddress(ByteArrays.getSubArray(rd, rd.length - 64, 4)).getHostAddress();
                     gpxFileWriter.writeFix(hexKey + "-dev", fix.time, fix, src);
                     pcnt++;
                 }
