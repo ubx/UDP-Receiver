@@ -18,21 +18,20 @@ public class ReadPcapFile {
     private static final String PCAP_FILE_KEY = ReadPcapFile.class.getName() + ".pcapFile";
 
     public static void main(String[] args) throws Exception {
-        GpxFileWriter gpxFileWriter;
+        // evaluate unique file name
         String fngpx;
         int c = 0;
         do {
         } while (new File(fngpx = "tracks2-" + c++ + ".gpx").isFile());
-        gpxFileWriter = new GpxFileWriter(fngpx);
+        GpxFileWriter gpxFileWriter = new GpxFileWriter(fngpx);
 
         String PCAP_FILE = System.getProperty(PCAP_FILE_KEY, args[0]);
         PcapHandle handle = Pcaps.openOffline(PCAP_FILE);
 
-        Packet packet;
         int pcnt = 0;
         while (true) {
             try {
-                packet = handle.getNextPacket();
+                Packet packet = handle.getNextPacket();
                 if (packet == null) break;
                 byte[] rd = packet.getRawData();
                 byte[] buffer = ByteArrays.getSubArray(rd, rd.length - Convert.DATA_LENGTH, Convert.DATA_LENGTH);
