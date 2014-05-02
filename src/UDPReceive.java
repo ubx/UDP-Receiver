@@ -7,15 +7,15 @@ import java.util.TimeZone;
 
 public class UDPReceive {
 
-    private static DatagramSocket dsocket;
+    private static DatagramSocket socket;
 
     private static DecimalFormat dfLat = new DecimalFormat("##.######");
     private static DecimalFormat dfLon = new DecimalFormat("###.######");
     private static DecimalFormat dfAlt = new DecimalFormat("#####");
     private static DecimalFormat dfMis = new DecimalFormat("####");
     private static Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-    private static final String DEF_IP_ADDRESS = "78.47.50.46";   // default is the real Live Tracking server
-    //private static final String DEF_IP_ADDRESS = "192.168.1.36";
+    private static final String DEF_IP_ADDRESS = "78.47.50.46";
+    public static final int PORT = 5597;
 
     private static GpxFileWriter gpxFileWriter;
 
@@ -23,7 +23,7 @@ public class UDPReceive {
         Runtime.getRuntime().
                 addShutdownHook(new Thread(new Runnable() {
                     public void run() {
-                        dsocket.close();
+                        socket.close();
                         gpxFileWriter.close();
                     }
                 }));
@@ -33,7 +33,7 @@ public class UDPReceive {
 
         boolean relay = args.length > 0 && args[0] != null && args[0].equals("-relay");
         DatagramPacket datagram = null;
-        SocketAddress serverAddress = new InetSocketAddress(InetAddress.getByName(DEF_IP_ADDRESS), 5597);
+        SocketAddress serverAddress = new InetSocketAddress(InetAddress.getByName(DEF_IP_ADDRESS), PORT);
         DatagramSocket socketTx = null;
 
         String fngpx;
@@ -43,10 +43,9 @@ public class UDPReceive {
         gpxFileWriter = new GpxFileWriter(fngpx);
 
         try {
-            int port = 5597;
 
             // Create a socket to listen on the port.
-            dsocket = new DatagramSocket(port);
+            socket = new DatagramSocket(PORT);
 
             // Create a buffer to read datagrams into. If a
             // packet is larger than this buffer, the
@@ -59,7 +58,7 @@ public class UDPReceive {
             // Now loop forever, waiting to receive packets and printing them.
             while (true) {
                 // Wait to receive a datagram
-                dsocket.receive(packet);
+                socket.receive(packet);
 
                 Convert.Fix fix = null;
                 if (packet.getLength() == Convert.DATA_LENGTH) {
