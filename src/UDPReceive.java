@@ -14,7 +14,7 @@ public class UDPReceive {
     private static DecimalFormat dfAlt = new DecimalFormat("#####");
     private static DecimalFormat dfMis = new DecimalFormat("####");
     private static Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
-    private static final String DEF_IP_ADDRESS = "78.47.50.46";
+    private static final String DEF_IP_ADDRESS = "95.128.34.172";
     public static final int PORT = 5597;
 
     private static GpxFileWriter gpxFileWriter;
