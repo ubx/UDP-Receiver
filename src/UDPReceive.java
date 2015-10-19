@@ -9,8 +9,8 @@ public class UDPReceive {
 
     private static DatagramSocket socket;
 
-    private static DecimalFormat dfLat = new DecimalFormat("##.######");
-    private static DecimalFormat dfLon = new DecimalFormat("###.######");
+    private static DecimalFormat dfLat = new DecimalFormat("##.00000");
+    private static DecimalFormat dfLon = new DecimalFormat("###.00000");
     private static DecimalFormat dfAlt = new DecimalFormat("#####");
     private static DecimalFormat dfMis = new DecimalFormat("####");
     private static Calendar calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
@@ -69,17 +69,17 @@ public class UDPReceive {
                     String hexKey = Convert.getHexKey(buffer);
                     String src = packet.getAddress().getHostName();
                     System.out.println(src
-                            + ": Fix, rcv time=" + rcvtime
-                            + " time=" + fix.time
-                            + "(" + (rcvtime - fix.time) + ")"
-                            + " key=" + hexKey
-                            + " lat=" + dfLat.format(fix.latitude)
-                            + " lon=" + dfLon.format(fix.longitude)
-                            + " trk=" + dfMis.format(fix.track)
-                            + " gs=" + dfMis.format(fix.groundSpeed)
-                            + " alt=" + dfAlt.format(fix.altitude)
-                            + " vario=" + dfMis.format(fix.vario)
-                            + " noise=" + dfMis.format(fix.noise)
+                                    + ": Fix, rcv time=" + rcvtime
+                                    + " time=" + fix.time
+                                    + "(" + (rcvtime - fix.time) + ")"
+                                    + " key=" + hexKey
+                                    + " lon=" + dfLon.format(fix.longitude)
+                                    + " lat=" + dfLat.format(fix.latitude)
+                                    + " trk=" + dfMis.format(fix.track)
+                                    + " gs=" + dfMis.format(fix.groundSpeed)
+                                    + " alt=" + dfAlt.format(fix.altitude)
+                                    + " vario=" + dfMis.format(fix.vario)
+                                    + " noise=" + dfMis.format(fix.noise)
                     );
                     gpxFileWriter.writeFix(hexKey + "-gps", fix.time, fix, src);
                     gpxFileWriter.writeFix(hexKey + "-rcv", rcvtime, fix, src);
