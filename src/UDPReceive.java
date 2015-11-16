@@ -32,6 +32,7 @@ public class UDPReceive {
     public static void main(String args[]) throws UnknownHostException {
 
         boolean relay = args.length > 0 && args[0] != null && args[0].equals("-relay");
+        boolean br = args.length > 0 && args[0] != null && args[0].equals("-br");
         DatagramPacket datagram = null;
         SocketAddress serverAddress = new InetSocketAddress(InetAddress.getByName(DEF_IP_ADDRESS), PORT);
         DatagramSocket socketTx = null;
@@ -65,24 +66,32 @@ public class UDPReceive {
                     fix = Convert.convert(buffer);
                 }
                 if (fix != null) {
-                    int rcvtime = getCurrentTime();
                     String hexKey = Convert.getHexKey(buffer);
-                    String src = packet.getAddress().getHostName();
-                    System.out.println(src
-                                    + ": Fix, rcv time=" + rcvtime
-                                    + " time=" + fix.time
-                                    + "(" + (rcvtime - fix.time) + ")"
-                                    + " key=" + hexKey
-                                    + " lon=" + dfLon.format(fix.longitude)
-                                    + " lat=" + dfLat.format(fix.latitude)
-                                    + " trk=" + dfMis.format(fix.track)
-                                    + " gs=" + dfMis.format(fix.groundSpeed)
-                                    + " alt=" + dfAlt.format(fix.altitude)
-                                    + " vario=" + dfMis.format(fix.vario)
-                                    + " noise=" + dfMis.format(fix.noise)
-                    );
-                    gpxFileWriter.writeFix(hexKey + "-gps", fix.time, fix, src);
-                    gpxFileWriter.writeFix(hexKey + "-rcv", rcvtime, fix, src);
+                    if (br) {
+                        System.out.println(fix.time
+                                + "," + fix.time
+                                + "," + hexKey
+                                + "," + dfLon.format(fix.longitude)
+                                + "," + dfLat.format(fix.latitude)
+                                + "," + dfAlt.format(fix.altitude));
+                    } else {
+                        String src = packet.getAddress().getHostName();
+                        int rcvtime = getCurrentTime();
+                        System.out.println(src
+                                + ": Fix, rcv time=" + rcvtime
+                                + " time=" + fix.time
+                                + "(" + (rcvtime - fix.time) + ")"
+                                + " key=" + hexKey
+                                + " lon=" + dfLon.format(fix.longitude)
+                                + " lat=" + dfLat.format(fix.latitude)
+                                + " trk=" + dfMis.format(fix.track)
+                                + " gs=" + dfMis.format(fix.groundSpeed)
+                                + " alt=" + dfAlt.format(fix.altitude)
+                                + " vario=" + dfMis.format(fix.vario)
+                                + " noise=" + dfMis.format(fix.noise));
+                        gpxFileWriter.writeFix(hexKey + "-gps", fix.time, fix, src);
+                        gpxFileWriter.writeFix(hexKey + "-rcv", rcvtime, fix, src);
+                    }
 
                     // relay packet to real SkyLines server
                     if (relay) {
