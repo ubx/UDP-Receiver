@@ -23,8 +23,10 @@ public class UDPReceive {
         Runtime.getRuntime().
                 addShutdownHook(new Thread(new Runnable() {
                     public void run() {
-                        socket.close();
-                        gpxFileWriter.close();
+                        if (socket != null) {
+                            socket.close();
+                            gpxFileWriter.close();
+                        }
                     }
                 }));
     }
@@ -69,7 +71,6 @@ public class UDPReceive {
                     String hexKey = Convert.getHexKey(buffer);
                     if (br) {
                         System.out.println(fix.time
-                                + "," + fix.time
                                 + "," + hexKey
                                 + "," + dfLon.format(fix.longitude)
                                 + "," + dfLat.format(fix.latitude)
