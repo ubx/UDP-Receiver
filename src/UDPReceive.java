@@ -70,7 +70,7 @@ public class UDPReceive {
                 if (fix != null) {
                     String hexKey = Convert.getHexKey(buffer);
                     if (br) {
-                        System.out.println(fix.time
+                        System.out.println("Rcv: " +fix.time
                                 + "," + hexKey
                                 + "," + dfLon.format(fix.longitude)
                                 + "," + dfLat.format(fix.latitude)
